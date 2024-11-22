@@ -4,22 +4,38 @@
       <div class="content">
         <!-- Lista de tickets -->
         <div class="ticket-list">
-          <div class="ticket-item">
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Problemas Computador' }"
+            @click="selectTicket('Problemas Computador')"
+          >
             <h3>Problemas Computador</h3>
             <p>Ticket específico para relatar problemas de computador.</p>
           </div>
-          <div class="ticket-item">
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
+            @click="selectTicket('Manutenção Infraestrutura')"
+          >
             <h3>Manutenção Infraestrutura</h3>
             <p>
               Ticket específico para manutenção e instalação de equipamentos de
               infraestrutura de TI.
             </p>
           </div>
-          <div class="ticket-item">
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Falha em Sistemas' }"
+            @click="selectTicket('Falha em Sistemas')"
+          >
             <h3>Falha em Sistemas</h3>
             <p>Ticket relacionado a falhas de sistema interno.</p>
           </div>
-          <div class="ticket-item">
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
+            @click="selectTicket('Novo Colaborador / Acessos')"
+          >
             <h3>Novo Colaborador / Acessos</h3>
             <p>
               Ticket relacionado à solicitação de RH para novos acessos de
@@ -35,7 +51,14 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      selectedTicket: null,
+    };
+  },
+  methods: {
+    selectTicket(ticket) {
+      this.selectedTicket = ticket;
+    },
   },
 };
 </script>
@@ -158,6 +181,7 @@ export default {
   background-color: #e0e0e0;
   padding: 15px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .ticket-item h3 {
@@ -169,5 +193,10 @@ export default {
 .ticket-item p {
   margin: 5px 0 0;
   font-size: 14px;
+}
+
+.ticket-item.selected {
+  background-color: #4caf50;
+  color: white;
 }
 </style>

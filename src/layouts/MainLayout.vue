@@ -39,6 +39,13 @@
           </q-item-section>
           <q-item-section> Abrir chamado </q-item-section>
         </q-item>
+
+        <q-item to="/requisicoes">
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+          <q-item-section> Minhas requisições de suporte </q-item-section>
+        </q-item>
         
         <EssentialLink
           v-for="link in linksList"
@@ -82,11 +89,6 @@ const linksList = [
     title: "Relatório Geral",
     icon: "bar_chart",
     link: "/relatorio",
-  },
-  {
-    title: "Histórico de chamados",
-    icon: "history",
-    link: "/historico",
   },
   {
     title: "Ajuda",
