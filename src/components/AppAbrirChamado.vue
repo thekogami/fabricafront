@@ -1,20 +1,7 @@
 <template>
   <div class="support-page">
-    <!-- Conteúdo principal -->
     <main class="main-content">
-      <!-- Conteúdo da página -->
       <div class="content">
-        <!-- Categoria -->
-        <div class="categories">
-          <h2>CATEGORIAS</h2>
-          <ul class="category-list">
-            <li class="category-item">Ver todos</li>
-            <li class="category-item selected">HelpDesk</li>
-            <li class="category-item selected">Sistemas</li>
-            <li class="category-item">Infraestrutura</li>
-          </ul>
-        </div>
-
         <!-- Lista de tickets -->
         <div class="ticket-list">
           <div class="ticket-item">

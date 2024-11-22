@@ -33,6 +33,13 @@
 
         <q-separator />
 
+        <q-item to="/abrir-chamado">
+          <q-item-section avatar>
+            <q-icon name="add" />
+          </q-item-section>
+          <q-item-section> Abrir chamado </q-item-section>
+        </q-item>
+        
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -62,14 +69,24 @@ defineOptions({
 
 const linksList = [
   {
-    title: "Abrir chamado",
-    icon: "add",
-    link: "/abrir-chamado",
-  },
-  {
     title: "Minhas requisições de suporte",
     icon: "list",
     link: "/requisicoes",
+  },
+  {
+    title: "Assistência",
+    icon: "support",
+    link: "/assistencia",
+  },
+  {
+    title: "Relatório Geral",
+    icon: "bar_chart",
+    link: "/relatorio",
+  },
+  {
+    title: "Histórico de chamados",
+    icon: "history",
+    link: "/historico",
   },
   {
     title: "Ajuda",
@@ -92,6 +109,12 @@ const pageTitle = computed(() => {
       return "Abrir chamado";
     case "/requisicoes":
       return "Minhas requisições de suporte";
+    case "/assistencia":
+      return "Assistência";
+    case "/relatorio":
+      return "Relatório Geral";
+    case "/historico":
+      return "Histórico de chamados";
     case "/ajuda":
       return "Ajuda";
     default:
