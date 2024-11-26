@@ -1,9 +1,9 @@
 <template>
-  <div class="requisicoes-usuarios-app q-pa-md">
+  <div class="assistencia q-pa-md">
     <q-page>
       <q-card>
         <q-card-section>
-          <div class="text-h6">Minhas Requisições</div>
+          <div class="text-h6">Chamados</div>
         </q-card-section>
 
         <q-card-section>
@@ -53,28 +53,28 @@ export default {
     const requisicoes = ref([
       {
         id: 1,
-        requerente: "Ann Culhane",
+        requerente: "Ana",
         nome: "Problemas Computador",
         status: "Aberto",
         dataAbertura: "21-06-2024 14:30",
       },
       {
         id: 2,
-        requerente: "Ahmad Rosser",
+        requerente: "Patrick Bateman",
         nome: "Manutenção Infraestrutura",
         status: "Em andamento",
         dataAbertura: "06-05-2024 18:30",
       },
       {
         id: 3,
-        requerente: "Ann Culhane",
+        requerente: "Vitor Cagneti",
         nome: "Falha em Sistemas",
         status: "Aberto",
         dataAbertura: "02-03-2024 17:30",
       },
       {
         id: 4,
-        requerente: "Ahmad Rosser",
+        requerente: "Jair",
         nome: "Novo Colaborador / Acessos",
         status: "Em andamento",
         dataAbertura: "01-06-2024 16:30",

@@ -14,7 +14,9 @@
           </div>
           <div
             class="ticket-item"
-            :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
+            :class="{
+              selected: selectedTicket === 'Manutenção Infraestrutura',
+            }"
             @click="selectTicket('Manutenção Infraestrutura')"
           >
             <h3>Manutenção Infraestrutura</h3>
@@ -33,7 +35,9 @@
           </div>
           <div
             class="ticket-item"
-            :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
+            :class="{
+              selected: selectedTicket === 'Novo Colaborador / Acessos',
+            }"
             @click="selectTicket('Novo Colaborador / Acessos')"
           >
             <h3>Novo Colaborador / Acessos</h3>
@@ -182,6 +186,17 @@ export default {
   padding: 15px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.ticket-item:hover {
+  background-color: #d0d0d0;
+  transform: scale(1.02);
+}
+
+.ticket-item.selected {
+  background-color: #4caf50;
+  color: white;
 }
 
 .ticket-item h3 {
@@ -193,10 +208,5 @@ export default {
 .ticket-item p {
   margin: 5px 0 0;
   font-size: 14px;
-}
-
-.ticket-item.selected {
-  background-color: #4caf50;
-  color: white;
 }
 </style>
