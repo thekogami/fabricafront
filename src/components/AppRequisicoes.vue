@@ -25,16 +25,23 @@
             selection="multiple"
             v-model:selected="selectedRequisicoes"
           >
-            <template v-slot:body-cell-status="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="statusColor(props.row.status)"
-                  text-color="white"
-                  size="small"
-                >
-                  {{ props.row.status }}
-                </q-chip>
-              </q-td>
+            <template v-slot:body="props">
+              <q-tr :props="props" @dblclick="openChamado(props.row.id)">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                  <div v-if="col.name === 'status'">
+                    <q-chip
+                      :color="statusColor(props.row.status)"
+                      text-color="white"
+                      size="small"
+                    >
+                      {{ props.row.status }}
+                    </q-chip>
+                  </div>
+                  <div v-else>
+                    {{ props.row[col.field] }}
+                  </div>
+                </q-td>
+              </q-tr>
             </template>
           </q-table>
         </q-card-section>
@@ -45,10 +52,12 @@
 
 <script>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "AppRequisicoes",
   setup() {
+    const router = useRouter();
     const searchQuery = ref("");
     const requisicoes = ref([
       {
@@ -131,6 +140,10 @@ export default {
 
     const selectedRequisicoes = ref([]);
 
+    const openChamado = (id) => {
+      router.push({ name: "AppChamadoAberto", params: { id } });
+    };
+
     return {
       searchQuery,
       requisicoes,
@@ -138,6 +151,7 @@ export default {
       filteredRequisicoes,
       statusColor,
       selectedRequisicoes,
+      openChamado,
     };
   },
 };
