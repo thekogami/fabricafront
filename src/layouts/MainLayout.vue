@@ -46,6 +46,13 @@
           </q-item-section>
           <q-item-section> Minhas requisições de suporte </q-item-section>
         </q-item>
+
+        <q-item to="/assistencia">
+          <q-item-section avatar>
+            <q-icon name="support" />
+          </q-item-section>
+          <q-item-section> Assistência </q-item-section>
+        </q-item>
         
         <EssentialLink
           v-for="link in linksList"

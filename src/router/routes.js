@@ -1,4 +1,5 @@
 import AppAbrirChamado from "src/components/AppAbrirChamado.vue";
+import AppAssistencia from "src/components/AppAssistencia.vue";
 import AppRequisicoes from "src/components/AppRequisicoes.vue";
 
 const routes = [
@@ -8,6 +9,7 @@ const routes = [
     children: [{ path: "", component: () => import("pages/IndexPage.vue") },
       { path: '/abrir-chamado', component: AppAbrirChamado },
       { path: '/requisicoes', component: AppRequisicoes },
+      { path: '/assistencia', component: AppAssistencia },
     ],
   },
 
