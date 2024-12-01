@@ -53,7 +53,7 @@
           </q-item-section>
           <q-item-section> Assistência </q-item-section>
         </q-item>
-        
+
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -127,7 +127,7 @@ const pageTitle = computed(() => {
     case "/ajuda":
       return "Ajuda";
     default:
-      return "Home";
+      return "Início";
   }
 });
 </script>

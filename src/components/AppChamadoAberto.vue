@@ -1,11 +1,18 @@
 <template>
   <q-page class="q-pa-md flex flex-col justify-between">
-    <!-- Título do Chamado -->
     <div class="text-center q-mb-md">
       <h3>🔵 Problema de Computador</h3>
     </div>
 
-    <!-- Histórico de Ações -->
+    <div class="text-right q-mb-md">
+      <q-btn
+        label="Concluir"
+        color="positive"
+        class="concluir-btn"
+        @click="finalizarChamado"
+      />
+    </div>
+
     <div class="q-card q-pa-md q-mb-md historico-acoes">
       <h5>Histórico de Ações:</h5>
 
@@ -83,17 +90,26 @@ export default {
       }
     };
 
+    const finalizarChamado = () => {
+      historicoAcoes.value.unshift({
+        usuario: "Você",
+        data: new Date().toLocaleString(),
+        mensagem: "Chamado finalizado.",
+        cor: "bg-red-3",
+      });
+    };
+
     return {
       historicoAcoes,
       novaMensagem,
       enviarMensagem,
+      finalizarChamado,
     };
   },
 };
 </script>
 
 <style scoped>
-/* Estilização básica */
 .q-page {
   display: flex;
   flex-direction: column;
@@ -104,7 +120,7 @@ export default {
 }
 
 .q-card {
-  max-height: 60vh;
+  max-height: calc(100vh - 250px);
   overflow-y: auto;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -115,8 +131,10 @@ export default {
 }
 
 .responder-chamado {
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   background-color: white;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   border-top: 1px solid #e0e0e0;
@@ -124,6 +142,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 10;
 }
 
 .mensagem-input {
@@ -134,6 +153,12 @@ export default {
 
 .enviar-btn {
   align-self: flex-end;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+.concluir-btn {
   border-radius: 12px;
   padding: 8px 16px;
   font-size: 16px;
