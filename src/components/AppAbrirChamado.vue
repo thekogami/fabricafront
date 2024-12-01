@@ -8,16 +8,16 @@
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Problemas Computador' }"
             @click="selectTicket('Problemas Computador')"
+            @dblclick="openDetailsModal('Problemas Computador')"
           >
             <h3>Problemas Computador</h3>
             <p>Ticket específico para relatar problemas de computador.</p>
           </div>
           <div
             class="ticket-item"
-            :class="{
-              selected: selectedTicket === 'Manutenção Infraestrutura',
-            }"
+            :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
             @click="selectTicket('Manutenção Infraestrutura')"
+            @dblclick="openDetailsModal('Manutenção Infraestrutura')"
           >
             <h3>Manutenção Infraestrutura</h3>
             <p>
@@ -29,16 +29,16 @@
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Falha em Sistemas' }"
             @click="selectTicket('Falha em Sistemas')"
+            @dblclick="openDetailsModal('Falha em Sistemas')"
           >
             <h3>Falha em Sistemas</h3>
             <p>Ticket relacionado a falhas de sistema interno.</p>
           </div>
           <div
             class="ticket-item"
-            :class="{
-              selected: selectedTicket === 'Novo Colaborador / Acessos',
-            }"
+            :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
             @click="selectTicket('Novo Colaborador / Acessos')"
+            @dblclick="openDetailsModal('Novo Colaborador / Acessos')"
           >
             <h3>Novo Colaborador / Acessos</h3>
             <p>
@@ -49,6 +49,25 @@
         </div>
       </div>
     </main>
+
+    <!-- Modal de Detalhes Complementares -->
+    <div v-if="showDetailsModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Detalhes Complementares</h3>
+        <textarea v-model="details" placeholder="Informe os detalhes..."></textarea>
+        <div class="file-upload">
+          <label for="file-upload" class="file-upload-label">
+            Anexar arquivos (max: 10MB)
+          </label>
+          <input type="file" id="file-upload" class="file-upload-input" />
+          <p>Arraste o arquivo e solte aqui:</p>
+        </div>
+        <div class="modal-buttons">
+          <button @click="closeDetailsModal">Fechar</button>
+          <button @click="submitDetails">Enviar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,11 +76,25 @@ export default {
   data() {
     return {
       selectedTicket: null,
+      showDetailsModal: false,
+      details: '',
     };
   },
   methods: {
     selectTicket(ticket) {
       this.selectedTicket = ticket;
+    },
+    openDetailsModal(ticket) {
+      this.selectedTicket = ticket;
+      this.showDetailsModal = true;
+    },
+    closeDetailsModal() {
+      this.showDetailsModal = false;
+      this.details = '';
+    },
+    submitDetails() {
+      // Lógica para enviar os detalhes
+      this.closeDetailsModal();
     },
   },
 };
@@ -208,5 +241,74 @@ export default {
 .ticket-item p {
   margin: 5px 0 0;
   font-size: 14px;
+}
+
+/* Estilos do modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 600px;
+  max-width: 90%;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content textarea {
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.file-upload {
+  margin-top: 20px;
+}
+
+.file-upload-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.file-upload-input {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background-color: #f44336;
 }
 </style>
