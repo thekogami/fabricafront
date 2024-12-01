@@ -15,7 +15,9 @@
           </div>
           <div
             class="ticket-item"
-            :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
+            :class="{
+              selected: selectedTicket === 'Manutenção Infraestrutura',
+            }"
             @click="selectTicket('Manutenção Infraestrutura')"
             @dblclick="openDetailsModal('Manutenção Infraestrutura')"
           >
@@ -36,7 +38,9 @@
           </div>
           <div
             class="ticket-item"
-            :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
+            :class="{
+              selected: selectedTicket === 'Novo Colaborador / Acessos',
+            }"
             @click="selectTicket('Novo Colaborador / Acessos')"
             @dblclick="openDetailsModal('Novo Colaborador / Acessos')"
           >
@@ -46,6 +50,24 @@
               colaborador.
             </p>
           </div>
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Reservar um item' }"
+            @click="selectTicket('Reservar um item')"
+            @dblclick="openDetailsModal('Reservar um item')"
+          >
+            <h3>Reservar um item</h3>
+            <p>Ticket específico para reservar item de informática.</p>
+          </div>
+          <div
+            class="ticket-item"
+            :class="{ selected: selectedTicket === 'Instalação de programa' }"
+            @click="selectTicket('Instalação de programa')"
+            @dblclick="openDetailsModal('Instalação de programa')"
+          >
+            <h3>Instalação de programa</h3>
+            <p>Ticket específico para instalações de software ou hardware.</p>
+          </div>
         </div>
       </div>
     </main>
@@ -54,7 +76,10 @@
     <div v-if="showDetailsModal" class="modal-overlay">
       <div class="modal-content">
         <h3>Detalhes Complementares</h3>
-        <textarea v-model="details" placeholder="Informe os detalhes..."></textarea>
+        <textarea
+          v-model="details"
+          placeholder="Informe os detalhes..."
+        ></textarea>
         <div class="file-upload">
           <label for="file-upload" class="file-upload-label">
             Anexar arquivos (max: 10MB)
@@ -77,7 +102,7 @@ export default {
     return {
       selectedTicket: null,
       showDetailsModal: false,
-      details: '',
+      details: "",
     };
   },
   methods: {
@@ -90,7 +115,7 @@ export default {
     },
     closeDetailsModal() {
       this.showDetailsModal = false;
-      this.details = '';
+      this.details = "";
     },
     submitDetails() {
       // Lógica para enviar os detalhes
