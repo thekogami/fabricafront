@@ -54,6 +54,13 @@
           <q-item-section> Assistência </q-item-section>
         </q-item>
 
+        <q-item to="/relatorio">
+          <q-item-section avatar>
+            <q-icon name="bar_chart" />
+          </q-item-section>
+          <q-item-section> Relatório Geral </q-item-section>
+        </q-item>
+
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"

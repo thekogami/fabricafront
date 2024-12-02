@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import BarChart from "components/BarChart.vue";
 
 export default {
@@ -25,10 +26,7 @@ export default {
   data() {
     return {
       chartData1: {
-        columns: [
-          ["data1", 30, 200, 100, 400, 150, 250],
-          ["data2", 130, 100, 140, 200, 150, 50],
-        ],
+        columns: [],
         type: "bar",
       },
       chartOptions1: {
@@ -39,13 +37,10 @@ export default {
         },
       },
       additionalData1: {
-        columns: [["data3", 130, -150, 200, 300, -200, 100]],
+        columns: [],
       },
       chartData2: {
-        columns: [
-          ["data1", -100, 100, 200, [-100, 0], [0, 100], [100, 200]],
-          ["data2", 100, 300, 500, [0, 100], [100, 300], [200, 500]],
-        ],
+        columns: [],
         type: "bar",
       },
       chartOptions2: {
@@ -56,9 +51,39 @@ export default {
         },
       },
       additionalData2: {
-        columns: [["data3", 200, 500, 800, [100, 200], [300, 500], [500, 800]]],
+        columns: [],
       },
     };
+  },
+  mounted() {
+    this.fetchChartData1();
+    this.fetchChartData2();
+  },
+  methods: {
+    async fetchChartData1() {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/relatorio/chart1"
+        );
+        this.chartData1.columns = response.data.columns;
+        // Se houver dados adicionais, você pode adicioná-los aqui
+        // this.additionalData1.columns = response.data.additionalColumns;
+      } catch (error) {
+        console.error("Erro ao buscar dados do gráfico 1:", error);
+      }
+    },
+    async fetchChartData2() {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/relatorio/chart2"
+        );
+        this.chartData2.columns = response.data.columns;
+        // Se houver dados adicionais, você pode adicioná-los aqui
+        // this.additionalData2.columns = response.data.additionalColumns;
+      } catch (error) {
+        console.error("Erro ao buscar dados do gráfico 2:", error);
+      }
+    },
   },
 };
 </script>
