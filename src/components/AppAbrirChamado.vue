@@ -15,9 +15,7 @@
           </div>
           <div
             class="ticket-item"
-            :class="{
-              selected: selectedTicket === 'Manutenção Infraestrutura',
-            }"
+            :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
             @click="selectTicket('Manutenção Infraestrutura')"
             @dblclick="openDetailsModal('Manutenção Infraestrutura')"
           >
@@ -38,9 +36,7 @@
           </div>
           <div
             class="ticket-item"
-            :class="{
-              selected: selectedTicket === 'Novo Colaborador / Acessos',
-            }"
+            :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
             @click="selectTicket('Novo Colaborador / Acessos')"
             @dblclick="openDetailsModal('Novo Colaborador / Acessos')"
           >
@@ -93,16 +89,40 @@
         </div>
       </div>
     </div>
+
+    <!-- Popup de Confirmação -->
+    <q-dialog v-model="showSuccessDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Chamado Criado</div>
+        </q-card-section>
+        <q-card-section>
+          Chamado {{ createdTicketId }} criado com sucesso.
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="primary" @click="showSuccessDialog = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { useQuasar } from 'quasar';
+
 export default {
+  setup() {
+    const $q = useQuasar();
+    return { $q };
+  },
   data() {
     return {
       selectedTicket: null,
       showDetailsModal: false,
       details: "",
+      showSuccessDialog: false,
+      createdTicketId: null,
     };
   },
   methods: {
@@ -117,11 +137,23 @@ export default {
       this.showDetailsModal = false;
       this.details = "";
     },
-    submitDetails() {
-      console.log("Ticket:", this.selectedTicket);
-      console.log("Details:", this.details);
-      // Lógica para enviar os detalhes
-      this.closeDetailsModal();
+    async submitDetails() {
+      try {
+        const response = await axios.post('http://localhost:8080/api/chamados', {
+          descricao: this.selectedTicket,
+          detalhes: this.details,
+        });
+        console.log("Chamado criado com sucesso:", response.data);
+        this.createdTicketId = response.data.id;
+        this.showSuccessDialog = true;
+        this.closeDetailsModal();
+      } catch (error) {
+        console.error("Erro ao criar chamado:", error);
+        this.$q.notify({
+          type: 'negative',
+          message: 'Erro ao criar chamado',
+        });
+      }
     },
   },
 };

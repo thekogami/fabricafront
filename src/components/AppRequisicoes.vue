@@ -27,7 +27,7 @@
           >
             <template v-slot:body="props">
               <q-tr :props="props" @dblclick="openChamado(props.row.id)">
-                <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="col.alignClass">
                   <div v-if="col.name === 'status'">
                     <q-chip
                       :color="statusColor(props.row.status)"
@@ -63,32 +63,18 @@ export default {
   setup() {
     const router = useRouter();
     const searchQuery = ref("");
-    const requisicoes = ref([
-      {
-        id: 1,
-        requerente: "João Silva",
-        nome: "Requisição de Exemplo",
-        status: "Aberto",
-        dataAbertura: "2023-10-01",
-      },
-    ]);
+    const requisicoes = ref([]);
     const selectedRequisicoes = ref([]);
 
     const columns = [
-      { name: "id", required: true, label: "ID", align: "left", field: "id" },
+      { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
       {
-        name: "requerente",
+        name: "descricao",
         required: true,
-        label: "Requerente",
+        label: "Descrição",
         align: "left",
-        field: "requerente",
-      },
-      {
-        name: "nome",
-        required: true,
-        label: "Nome",
-        align: "left",
-        field: "nome",
+        field: "descricao",
+        alignClass: 'text-left'
       },
       {
         name: "status",
@@ -96,19 +82,14 @@ export default {
         label: "Status",
         align: "left",
         field: "status",
-      },
-      {
-        name: "dataAbertura",
-        required: true,
-        label: "Data de Abertura",
-        align: "left",
-        field: "dataAbertura",
+        alignClass: 'text-left'
       },
     ];
 
     const fetchRequisicoes = async () => {
       try {
-        const response = await axios.get("/api/chamados");
+        const response = await axios.get("http://localhost:8080/api/chamados");
+        console.log("Dados recebidos:", response.data);
         requisicoes.value = response.data;
       } catch (error) {
         console.error("Erro ao buscar requisições:", error);
@@ -122,12 +103,12 @@ export default {
     const filteredRequisicoes = computed(() => {
       return requisicoes.value.filter(
         (requisicao) =>
-          requisicao.requerente
+          requisicao.descricao
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase()) ||
-          requisicao.nome
+          (requisicao.status && requisicao.status
             .toLowerCase()
-            .includes(searchQuery.value.toLowerCase())
+            .includes(searchQuery.value.toLowerCase()))
       );
     });
 
@@ -178,5 +159,9 @@ export default {
 
 .q-table {
   margin-top: 20px;
+}
+
+.text-left {
+  text-align: left;
 }
 </style>
