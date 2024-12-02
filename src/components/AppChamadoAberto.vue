@@ -1,19 +1,20 @@
 <template>
   <q-page class="q-pa-md flex flex-col justify-between">
-    <div class="text-center q-mb-md">
-      <h3>🔵 Problema de Computador</h3>
-    </div>
-
-    <div class="text-right q-mb-md">
+    <div class="header q-mb-md">
+      <div class="status-icon">
+        <q-icon :name="statusIcon" />
+      </div>
+      <h3 class="title">{{ chamado?.nome || 'Chamado não encontrado' }}</h3>
       <q-btn
         label="Concluir"
         color="positive"
         class="concluir-btn"
         @click="finalizarChamado"
+        v-if="chamado"
       />
     </div>
 
-    <div class="q-card q-pa-md q-mb-md historico-acoes">
+    <div class="q-card q-pa-md q-mb-md historico-acoes" v-if="chamado">
       <h5>Histórico de Ações:</h5>
 
       <div v-for="(acao, index) in historicoAcoes" :key="index" class="q-mb-md">
@@ -27,7 +28,7 @@
     </div>
 
     <!-- Caixa de Resposta -->
-    <div class="responder-chamado q-pa-md">
+    <div class="responder-chamado q-pa-md" v-if="chamado">
       <q-input
         v-model="novaMensagem"
         type="textarea"
@@ -48,11 +49,17 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export default {
   name: "AppChamadoAberto",
-  setup() {
+  props: {
+    chamado: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const historicoAcoes = ref([
       {
         usuario: "Técnico Mourão",
@@ -77,6 +84,14 @@ export default {
     ]);
 
     const novaMensagem = ref("");
+
+    const statusIcon = computed(() => {
+      const lastAction = historicoAcoes.value[0];
+      if (lastAction.cor === "bg-red-3") return "error";
+      if (lastAction.cor === "bg-yellow-3") return "warning";
+      if (lastAction.cor === "bg-green-3") return "check_circle";
+      return "info";
+    });
 
     const enviarMensagem = () => {
       if (novaMensagem.value.trim() !== "") {
@@ -104,6 +119,7 @@ export default {
       novaMensagem,
       enviarMensagem,
       finalizarChamado,
+      statusIcon,
     };
   },
 };
@@ -117,6 +133,21 @@ export default {
   background-color: #f8f9fa;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-icon {
+  margin-right: 8px;
+}
+
+.title {
+  flex-grow: 1;
+  text-align: center;
 }
 
 .q-card {

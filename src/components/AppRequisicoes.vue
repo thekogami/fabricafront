@@ -43,6 +43,9 @@
                 </q-td>
               </q-tr>
             </template>
+            <template v-slot:no-data>
+              <div class="text-center q-pa-md">Sem chamados cadastrados</div>
+            </template>
           </q-table>
         </q-card-section>
       </q-card>
@@ -51,8 +54,9 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   name: "AppRequisicoes",
@@ -62,33 +66,13 @@ export default {
     const requisicoes = ref([
       {
         id: 1,
-        requerente: "Ann Culhane",
-        nome: "Problemas Computador",
+        requerente: "João Silva",
+        nome: "Requisição de Exemplo",
         status: "Aberto",
-        dataAbertura: "21-06-2024 14:30",
-      },
-      {
-        id: 2,
-        requerente: "Ahmad Rosser",
-        nome: "Manutenção Infraestrutura",
-        status: "Em andamento",
-        dataAbertura: "06-05-2024 18:30",
-      },
-      {
-        id: 3,
-        requerente: "Ann Culhane",
-        nome: "Falha em Sistemas",
-        status: "Aberto",
-        dataAbertura: "02-03-2024 17:30",
-      },
-      {
-        id: 4,
-        requerente: "Ahmad Rosser",
-        nome: "Novo Colaborador / Acessos",
-        status: "Em andamento",
-        dataAbertura: "01-06-2024 16:30",
+        dataAbertura: "2023-10-01",
       },
     ]);
+    const selectedRequisicoes = ref([]);
 
     const columns = [
       { name: "id", required: true, label: "ID", align: "left", field: "id" },
@@ -122,6 +106,19 @@ export default {
       },
     ];
 
+    const fetchRequisicoes = async () => {
+      try {
+        const response = await axios.get("/api/chamados");
+        requisicoes.value = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar requisições:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchRequisicoes();
+    });
+
     const filteredRequisicoes = computed(() => {
       return requisicoes.value.filter(
         (requisicao) =>
@@ -138,10 +135,11 @@ export default {
       return status === "Aberto" ? "green" : "orange";
     };
 
-    const selectedRequisicoes = ref([]);
-
     const openChamado = (id) => {
-      router.push({ name: "AppChamadoAberto", params: { id } });
+      const chamado = requisicoes.value.find((req) => req.id === id);
+      if (chamado) {
+        router.push({ name: "AppChamadoAberto", params: { id: chamado.id, chamado } });
+      }
     };
 
     return {

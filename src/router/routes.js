@@ -13,11 +13,11 @@ const routes = [
       { path: "/requisicoes", component: AppRequisicoes },
       { path: "/assistencia", component: AppAssistencia },
       {
-        path: "/chamado/:id",
-        name: "AppChamadoAberto",
+        path: '/chamado/:id',
+        name: 'AppChamadoAberto',
         component: AppChamadoAberto,
-        props: true,
-      },
+        props: route => ({ chamado: route.params.chamado })
+      }
     ],
   },
   {
