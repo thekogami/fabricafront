@@ -118,6 +118,8 @@ export default {
       this.details = "";
     },
     submitDetails() {
+      console.log("Ticket:", this.selectedTicket);
+      console.log("Details:", this.details);
       // Lógica para enviar os detalhes
       this.closeDetailsModal();
     },
