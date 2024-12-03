@@ -38,28 +38,36 @@
           <q-item-section avatar>
             <q-icon name="add" />
           </q-item-section>
-          <q-item-section> Abrir chamado </q-item-section>
+          <q-item-section>
+            <q-item-label>Abrir chamado</q-item-label>
+          </q-item-section>
         </q-item>
 
         <q-item to="/requisicoes">
           <q-item-section avatar>
             <q-icon name="list" />
           </q-item-section>
-          <q-item-section> Minhas requisições de suporte </q-item-section>
+          <q-item-section>
+            <q-item-label>Minhas requisições de suporte</q-item-label>
+          </q-item-section>
         </q-item>
 
         <q-item to="/assistencia">
           <q-item-section avatar>
             <q-icon name="support" />
           </q-item-section>
-          <q-item-section> Assistência </q-item-section>
+          <q-item-section>
+            <q-item-label>Assistência</q-item-label>
+          </q-item-section>
         </q-item>
 
         <q-item to="/relatorio">
           <q-item-section avatar>
             <q-icon name="bar_chart" />
           </q-item-section>
-          <q-item-section> Relatório Geral </q-item-section>
+          <q-item-section>
+            <q-item-label>Relatório Geral</q-item-label>
+          </q-item-section>
         </q-item>
 
         <EssentialLink
@@ -74,7 +82,10 @@
           <q-item-section avatar>
             <q-icon name="exit_to_app" />
           </q-item-section>
-          <q-item-section> Sair </q-item-section>
+          <q-item-section>
+            <q-item-label>Sair</q-item-label>
+            <q-item-label caption>Encerrar sessão</q-item-label>
+          </q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -95,28 +106,7 @@ defineOptions({
   name: "MainLayout",
 });
 
-const linksList = [
-  {
-    title: "Minhas requisições de suporte",
-    icon: "list",
-    link: "/requisicoes",
-  },
-  {
-    title: "Assistência",
-    icon: "support",
-    link: "/assistencia",
-  },
-  {
-    title: "Relatório Geral",
-    icon: "bar_chart",
-    link: "/relatorio",
-  },
-  {
-    title: "Ajuda",
-    icon: "help",
-    link: "/ajuda",
-  },
-];
+const linksList = [];
 
 const leftDrawerOpen = ref(false);
 
@@ -160,7 +150,7 @@ onMounted(async () => {
         `http://localhost:8080/api/usuarios/${email}`
       );
       if (response.data) {
-        userName.value = response.data.nome; // Supondo que o nome do usuário está no campo 'nome'
+        userName.value = response.data.nome;
       }
     } catch (error) {
       console.error("Erro ao obter informações do usuário:", error);

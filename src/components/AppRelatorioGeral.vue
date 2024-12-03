@@ -1,86 +1,69 @@
 <template>
   <div>
-    <BarChart
-      chartId="barChart1"
-      :chartData="chartData1"
-      :chartOptions="chartOptions1"
-      :additionalData="additionalData1"
-    />
-    <BarChart
-      chartId="barChart2"
-      :chartData="chartData2"
-      :chartOptions="chartOptions2"
-      :additionalData="additionalData2"
-    />
+    <div id="chart"></div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import BarChart from "components/BarChart.vue";
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 export default {
-  components: {
-    BarChart,
-  },
   data() {
     return {
-      chartData1: {
+      chartData: {
         columns: [],
         type: "bar",
-      },
-      chartOptions1: {
-        bar: {
-          width: {
-            ratio: 0.5,
-          },
-        },
-      },
-      additionalData1: {
-        columns: [],
-      },
-      chartData2: {
-        columns: [],
-        type: "bar",
-      },
-      chartOptions2: {
-        bar: {
-          width: {
-            ratio: 0.5,
-          },
-        },
-      },
-      additionalData2: {
-        columns: [],
       },
     };
   },
   mounted() {
-    this.fetchChartData1();
-    this.fetchChartData2();
+    this.fetchChartData();
   },
   methods: {
-    async fetchChartData1() {
+    async fetchChartData() {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/relatorio/chart1"
-        );
-        this.chartData1.columns = response.data.columns;
+        const response = await axios.get("http://localhost:8080/api/relatorio/chart");
+        this.chartData.columns = response.data.columns;
+        this.renderChart();
       } catch (error) {
-        console.error("Erro ao buscar dados do gráfico 1:", error);
+        console.error("Erro ao buscar dados do gráfico:", error);
       }
     },
-    async fetchChartData2() {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/relatorio/chart2"
-        );
-        this.chartData2.columns = response.data.columns;
-      } catch (error) {
-        console.error("Erro ao buscar dados do gráfico 2:", error);
-      }
-    },
-  },
+    renderChart() {
+      const chart = document.getElementById("chart");
+      const data = this.chartData.columns;
+      const labels = data.map(item => item[0]);
+      const values = data.map(item => item[1]);
+
+      const canvas = document.createElement("canvas");
+      chart.appendChild(canvas);
+      const ctx = canvas.getContext("2d");
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Chamados',
+            data: values,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  }
 };
 </script>
 

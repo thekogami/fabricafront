@@ -92,7 +92,7 @@ export default {
           console.log("Login bem-sucedido");
           localStorage.setItem('userEmail', this.email); // Armazene o email do usuário no localStorage
           localStorage.setItem('isAuthenticated', 'true'); // Armazene o estado de autenticação
-          this.$router.push('/requisicoes'); // Redirecione para a página principal ou dashboard
+          this.$router.push('/abrir-chamado'); // Redirecione para a tela de abrir chamado
         } else {
           this.$q.notify({
             type: 'negative',
