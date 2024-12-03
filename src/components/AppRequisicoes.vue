@@ -185,7 +185,16 @@ export default {
     });
 
     const statusColor = (status) => {
-      return status === "Aberto" ? "green" : "orange";
+      switch (status) {
+        case "Aberto":
+          return "green";
+        case "Em andamento":
+          return "orange";
+        case "Resolvido":
+          return "grey";
+        default:
+          return "blue";
+      }
     };
 
     const formatDate = (dateString) => {
