@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="left-section">
-      <img src="src/assets/computer.svg" alt="Logo " class="logo">
+      <img src="src/assets/computer.svg" alt="Logo Univille" class="logo">
     </div>
     <div class="right-section">
       <div class="login-form">
@@ -86,6 +86,7 @@ export default {
         if (response.data) {
           console.log("Login bem-sucedido");
           localStorage.setItem('userEmail', this.email); // Armazene o email do usuário no localStorage
+          localStorage.setItem('isAuthenticated', 'true'); // Armazene o estado de autenticação
           this.$router.push('/requisicoes'); // Redirecione para a página principal ou dashboard
         } else {
           this.$q.notify({

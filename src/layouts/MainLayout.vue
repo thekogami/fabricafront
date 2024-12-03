@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header v-if="isAuthenticated" elevated>
       <q-toolbar class="custom-toolbar">
         <q-btn
           flat
@@ -18,6 +18,7 @@
     </q-header>
 
     <q-drawer
+      v-if="isAuthenticated"
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -139,9 +140,11 @@ const pageTitle = computed(() => {
 });
 
 const userName = ref("");
+const isAuthenticated = ref(false);
 
 onMounted(async () => {
   const email = localStorage.getItem('userEmail');
+  isAuthenticated.value = localStorage.getItem('isAuthenticated') === 'true';
   if (email) {
     try {
       const response = await axios.get(`http://localhost:8080/api/usuarios/${email}`);
