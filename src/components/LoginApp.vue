@@ -5,39 +5,122 @@
     </div>
     <div class="right-section">
       <div class="login-form">
-        <h2>Sign In</h2>
+        <h2>Entrar</h2>
         <form @submit.prevent="handleLogin">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" v-model="email" placeholder="Enter your email" required>
+            <input type="email" id="email" v-model="email" placeholder="Digite seu email" required>
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" v-model="password" placeholder="Enter your password" required>
+            <label for="password">Senha</label>
+            <input type="password" id="password" v-model="password" placeholder="Digite sua senha" required>
           </div>
-          <button type="submit" class="submit-button">Sign In</button>
+          <button type="submit" class="submit-button">Entrar</button>
         </form>
-        <a href="#" class="forgot-password">Forgot password?</a>
+        <a href="#" class="forgot-password">Esqueceu a senha?</a>
+        <a href="#" class="register-link" @click="showRegisterModal = true">Registrar</a>
       </div>
     </div>
+
+    <!-- Modal de Cadastro -->
+    <q-dialog v-model="showRegisterModal">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Registrar</div>
+        </q-card-section>
+        <q-card-section>
+          <form @submit.prevent="handleRegister">
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input type="email" id="register-email" v-model="registerEmail" placeholder="Digite seu email" required>
+            </div>
+            <div class="form-group">
+              <label for="register-password">Senha</label>
+              <input type="password" id="register-password" v-model="registerPassword" placeholder="Digite sua senha" required>
+            </div>
+            <div class="form-group">
+              <label for="role">Tipo de Usuário</label>
+              <select id="role" v-model="role" required>
+                <option value="TECNICO_TI">Técnico de TI</option>
+                <option value="USUARIO_COMUM">Usuário Comum</option>
+              </select>
+            </div>
+            <button type="submit" class="submit-button">Registrar</button>
+          </form>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" @click="showRegisterModal = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { useQuasar } from 'quasar';
+
 export default {
+  setup() {
+    const $q = useQuasar();
+    return { $q };
+  },
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      showRegisterModal: false,
+      registerEmail: '',
+      registerPassword: '',
+      role: 'USUARIO_COMUM',
     };
   },
   methods: {
-    handleLogin() {
-      // Lógica de login aqui
-      console.log("Email:", this.email);
-      console.log("Password:", this.password);
-    }
-  }
+    async handleLogin() {
+      try {
+        const response = await axios.post('http://localhost:8080/api/usuarios/login', {
+          email: this.email,
+          password: this.password,
+        });
+        if (response.data) {
+          console.log("Login bem-sucedido");
+          // Redirecionar para a página principal ou dashboard
+        } else {
+          this.$q.notify({
+            type: 'negative',
+            message: 'Email ou senha inválidos',
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao fazer login:", error);
+        this.$q.notify({
+          type: 'negative',
+          message: 'Erro ao fazer login',
+        });
+      }
+    },
+    async handleRegister() {
+      try {
+        const response = await axios.post('http://localhost:8080/api/usuarios/cadastro', {
+          email: this.registerEmail,
+          password: this.registerPassword,
+          role: this.role,
+        });
+        console.log("Usuário registrado com sucesso:", response.data);
+        this.showRegisterModal = false;
+        this.$q.notify({
+          type: 'positive',
+          message: 'Usuário registrado com sucesso',
+        });
+      } catch (error) {
+        console.error("Erro ao registrar usuário:", error);
+        this.$q.notify({
+          type: 'negative',
+          message: 'Erro ao registrar usuário',
+        });
+      }
+    },
+  },
 };
 </script>
 
@@ -83,7 +166,7 @@ label {
   color: #333;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -108,7 +191,7 @@ input {
   background-color: #555;
 }
 
-.forgot-password {
+.forgot-password, .register-link {
   display: block;
   margin-top: 10px;
   font-size: 14px;
@@ -116,7 +199,7 @@ input {
   text-decoration: none;
 }
 
-.forgot-password:hover {
+.forgot-password:hover, .register-link:hover {
   text-decoration: underline;
 }
 </style>
