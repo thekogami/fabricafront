@@ -12,14 +12,9 @@ const routes = [
       { path: "", component: () => import("pages/IndexPage.vue") },
       { path: "/abrir-chamado", component: AppAbrirChamado },
       { path: "/requisicoes", component: AppRequisicoes },
+      { path: "/chamado/:id", component: AppChamadoAberto, props: true },
       { path: "/assistencia", component: AppAssistencia },
-      { path: "/relatorio", component: AppRelatorioGeral},
-      {
-        path: '/chamado/:id',
-        name: 'AppChamadoAberto',
-        component: AppChamadoAberto,
-        props: route => ({ chamado: route.params.chamado })
-      }
+      { path: "/relatorio", component: AppRelatorioGeral }
     ],
   },
   {

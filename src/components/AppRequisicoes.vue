@@ -136,10 +136,7 @@ export default {
     };
 
     const openChamado = (id) => {
-      const chamado = requisicoes.value.find((req) => req.id === id);
-      if (chamado) {
-        router.push({ name: "AppChamadoAberto", params: { id: chamado.id, chamado } });
-      }
+      router.push({ name: "AppChamadoAberto", params: { id } });
     };
 
     return {

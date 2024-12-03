@@ -4,7 +4,7 @@
       <div class="status-icon">
         <q-icon :name="statusIcon" />
       </div>
-      <h3 class="title">{{ chamado?.nome || 'Chamado não encontrado' }}</h3>
+      <h3 class="title">{{ chamado?.nome || "Chamado não encontrado" }}</h3>
       <q-btn
         label="Concluir"
         color="positive"
@@ -17,13 +17,18 @@
     <div class="q-card q-pa-md q-mb-md historico-acoes" v-if="chamado">
       <h5>Histórico de Ações:</h5>
 
-      <div v-for="(acao, index) in historicoAcoes" :key="index" class="q-mb-md">
-        <q-card flat bordered class="q-pa-sm q-mb-sm" :class="acao.cor">
-          <div class="q-mb-xs">
-            <strong>{{ acao.usuario }}</strong> - {{ acao.data }}
-          </div>
-          <div>{{ acao.mensagem }}</div>
-        </q-card>
+      <div v-if="historicoAcoes.length > 0">
+        <div v-for="(acao, index) in historicoAcoes" :key="index" class="q-mb-md">
+          <q-card flat bordered class="q-pa-sm q-mb-sm" :class="acao.cor">
+            <div class="q-mb-xs">
+              <strong>{{ acao.usuario }}</strong> - {{ acao.data }}
+            </div>
+            <div>{{ acao.mensagem }}</div>
+          </q-card>
+        </div>
+      </div>
+      <div v-else>
+        <p>Nenhuma ação registrada.</p>
       </div>
     </div>
 
@@ -49,43 +54,39 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import axios from 'axios';
 
 export default {
   name: "AppChamadoAberto",
   props: {
-    chamado: {
-      type: Object,
+    id: {
+      type: String,
       required: true,
     },
   },
   setup(props) {
-    const historicoAcoes = ref([
-      {
-        usuario: "Técnico Mourão",
-        data: "21-06-2024 14:30",
-        mensagem:
-          "Realizei a manutenção no equipamento e o chamado foi resolvido com sucesso!",
-        cor: "bg-indigo-3",
-      },
-      {
-        usuario: "Técnico Mourão",
-        data: "21-06-2024 14:00",
-        mensagem: "Olá boa tarde! Seu chamado já está em atendimento.",
-        cor: "bg-yellow-3",
-      },
-      {
-        usuario: "Ann Culhane",
-        data: "21-06-2024 13:30",
-        mensagem:
-          "Olá bom dia! Meu computador está apresentando tela azul às vezes, preciso de um suporte técnico urgente!",
-        cor: "bg-green-3",
-      },
-    ]);
+    const chamado = ref(null);
+    const historicoAcoes = ref([]);
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get(`http://localhost:9000/api/chamados/${props.id}`);
+        chamado.value = response.data;
+        if (chamado.value && chamado.value.historicoAcoes) {
+          historicoAcoes.value = chamado.value.historicoAcoes;
+        }
+      } catch (error) {
+        console.error("Erro ao carregar o chamado:", error);
+      }
+    });
 
     const novaMensagem = ref("");
 
     const statusIcon = computed(() => {
+      if (historicoAcoes.value.length === 0) {
+        return "info"; // Valor padrão caso não haja ações
+      }
       const lastAction = historicoAcoes.value[0];
       if (lastAction.cor === "bg-red-3") return "error";
       if (lastAction.cor === "bg-yellow-3") return "warning";
@@ -115,6 +116,7 @@ export default {
     };
 
     return {
+      chamado,
       historicoAcoes,
       novaMensagem,
       enviarMensagem,
