@@ -141,8 +141,8 @@ export default {
       try {
         const response = await axios.post('http://localhost:8080/api/chamados', {
           descricao: this.selectedTicket,
-          status: "Aberto", // Definindo o status inicial como "Aberto"
-          descricaoProblema: this.details, // Adicionando a descrição do problema
+          status: "Aberto",
+          descricaoProblema: this.details,
         });
         console.log("Chamado criado com sucesso:", response.data);
         this.createdTicketId = response.data.id;
@@ -161,13 +161,12 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos gerais da página */
 .support-page {
   display: flex;
   height: 100vh;
 }
 
-/* Estilos do menu lateral */
+
 .sidebar {
   width: 250px;
   background-color: #8cc63f;
@@ -205,7 +204,6 @@ export default {
   font-size: 16px;
 }
 
-/* Estilos do conteúdo principal */
 .main-content {
   flex: 1;
   display: flex;
@@ -213,7 +211,6 @@ export default {
   background-color: #f4f4f4;
 }
 
-/* Barra superior */
 .top-bar {
   height: 60px;
   background-color: #4caf50;
@@ -229,7 +226,6 @@ export default {
   cursor: pointer;
 }
 
-/* Conteúdo da página */
 .content {
   display: flex;
   padding: 20px;
@@ -265,7 +261,6 @@ export default {
   color: #fff;
 }
 
-/* Estilos dos tickets */
 .ticket-list {
   flex: 1;
   padding: 10px;
@@ -303,7 +298,6 @@ export default {
   font-size: 14px;
 }
 
-/* Estilos do modal */
 .modal-overlay {
   position: fixed;
   top: 0;
