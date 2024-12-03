@@ -28,7 +28,7 @@
           <q-item-section avatar>
             <q-icon name="person" />
           </q-item-section>
-          <q-item-section> Felipe </q-item-section>
+          <q-item-section> {{ userName }} </q-item-section>
         </q-item>
 
         <q-separator />
@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import EssentialLink from "components/EssentialLink.vue";
 
@@ -135,6 +135,22 @@ const pageTitle = computed(() => {
       return "Ajuda";
     default:
       return "Início";
+  }
+});
+
+const userName = ref("");
+
+onMounted(async () => {
+  const email = localStorage.getItem('userEmail');
+  if (email) {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/usuarios/${email}`);
+      if (response.data) {
+        userName.value = response.data.nome; // Supondo que o nome do usuário está no campo 'nome'
+      }
+    } catch (error) {
+      console.error("Erro ao obter informações do usuário:", error);
+    }
   }
 });
 </script>

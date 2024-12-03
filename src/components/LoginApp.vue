@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="left-section">
-      <img src="univille.svg" alt="Logo Univille" class="logo">
+      <img src="src/assets/computer.svg" alt="Logo " class="logo">
     </div>
     <div class="right-section">
       <div class="login-form">
@@ -61,6 +61,7 @@ import axios from 'axios';
 import { useQuasar } from 'quasar';
 
 export default {
+  name: "LoginApp",
   setup() {
     const $q = useQuasar();
     return { $q };
@@ -84,7 +85,8 @@ export default {
         });
         if (response.data) {
           console.log("Login bem-sucedido");
-          // Redirecionar para a página principal ou dashboard
+          localStorage.setItem('userEmail', this.email); // Armazene o email do usuário no localStorage
+          this.$router.push('/requisicoes'); // Redirecione para a página principal ou dashboard
         } else {
           this.$q.notify({
             type: 'negative',
@@ -132,7 +134,7 @@ export default {
 
 .left-section {
   flex: 1;
-  background-color: #8cc63f; /* Verde claro */
+  background-color: #4AC62CC9; /* Verde especificado */
   display: flex;
   justify-content: center;
   align-items: center;
