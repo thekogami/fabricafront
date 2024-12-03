@@ -44,6 +44,10 @@
                     {{ props.row[col.field] }}
                   </div>
                 </q-td>
+                <q-td>
+                  <q-btn flat icon="edit" @click="editChamado(props.row.id)" />
+                  <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
+                </q-td>
               </q-tr>
             </template>
             <template v-slot:no-data>
@@ -97,6 +101,13 @@ export default {
         field: "dataAbertura",
         alignClass: 'text-left'
       },
+      {
+        name: "actions",
+        label: "Ações",
+        align: "center",
+        field: "actions",
+        alignClass: 'text-center'
+      }
     ];
 
     const fetchRequisicoes = async () => {
@@ -139,6 +150,19 @@ export default {
       router.push({ name: "AppChamadoAberto", params: { id } });
     };
 
+    const editChamado = (id) => {
+      router.push({ name: "AppChamadoAberto", params: { id } });
+    };
+
+    const deleteChamado = async (id) => {
+      try {
+        await axios.delete(`http://localhost:8080/api/chamados/${id}`);
+        fetchRequisicoes(); // Atualize a lista de requisições após a exclusão
+      } catch (error) {
+        console.error("Erro ao excluir requisição:", error);
+      }
+    };
+
     return {
       searchQuery,
       requisicoes,
@@ -147,6 +171,8 @@ export default {
       statusColor,
       selectedRequisicoes,
       openChamado,
+      editChamado,
+      deleteChamado,
       formatDate,
     };
   },

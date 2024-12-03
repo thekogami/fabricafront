@@ -90,6 +90,10 @@
                     {{ props.row[col.field] }}
                   </div>
                 </q-td>
+                <q-td>
+                  <q-btn flat icon="edit" @click="editChamado(props.row.id)" />
+                  <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
+                </q-td>
               </q-tr>
             </template>
             <template v-slot:no-data>
@@ -105,12 +109,14 @@
 <script>
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default {
   name: "AppAssistencia",
   setup() {
+    const router = useRouter();
     const searchQuery = ref("");
     const selectedFilter = ref("todos");
     const requisicoes = ref([]);
@@ -149,6 +155,13 @@ export default {
         field: "dataAbertura",
         alignClass: "text-left",
       },
+      {
+        name: "actions",
+        label: "Ações",
+        align: "center",
+        field: "actions",
+        alignClass: 'text-center'
+      }
     ];
 
     const fetchRequisicoes = async () => {
@@ -233,10 +246,19 @@ export default {
     };
 
     const openChamado = (id) => {
-      const chamado = requisicoes.value.find((req) => req.id === id);
-      if (chamado) {
-        // Navegar para a página de detalhes do chamado
-        console.log(`Abrindo chamado ${id}`);
+      router.push({ name: "AppChamadoAberto", params: { id } });
+    };
+
+    const editChamado = (id) => {
+      router.push({ name: "AppChamadoAberto", params: { id } });
+    };
+
+    const deleteChamado = async (id) => {
+      try {
+        await axios.delete(`http://localhost:8080/api/chamados/${id}`);
+        fetchRequisicoes(); // Atualize a lista de requisições após a exclusão
+      } catch (error) {
+        console.error("Erro ao excluir requisição:", error);
       }
     };
 
@@ -252,6 +274,8 @@ export default {
       filterChamados,
       selectedFilter,
       openChamado,
+      editChamado,
+      deleteChamado,
       formatDate,
     };
   },
