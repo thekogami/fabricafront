@@ -31,6 +31,10 @@
         <q-card-section>
           <form @submit.prevent="handleRegister">
             <div class="form-group">
+              <label for="register-name">Nome</label>
+              <input type="text" id="register-name" v-model="registerName" placeholder="Digite seu nome" required>
+            </div>
+            <div class="form-group">
               <label for="register-email">Email</label>
               <input type="email" id="register-email" v-model="registerEmail" placeholder="Digite seu email" required>
             </div>
@@ -71,6 +75,7 @@ export default {
       email: '',
       password: '',
       showRegisterModal: false,
+      registerName: '', // Adicionei o campo de nome
       registerEmail: '',
       registerPassword: '',
       role: 'USUARIO_COMUM',
@@ -105,6 +110,7 @@ export default {
     async handleRegister() {
       try {
         const response = await axios.post('http://localhost:8080/api/usuarios/cadastro', {
+          nome: this.registerName, // Inclua o nome no payload
           email: this.registerEmail,
           password: this.registerPassword,
           role: this.role,
