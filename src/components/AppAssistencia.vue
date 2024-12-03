@@ -68,7 +68,12 @@
           >
             <template v-slot:body="props">
               <q-tr :props="props" @dblclick="openChamado(props.row.id)">
-                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="col.alignClass">
+                <q-td
+                  v-for="col in props.cols"
+                  :key="col.name"
+                  :props="props"
+                  :class="col.alignClass"
+                >
                   <div v-if="col.name === 'status'">
                     <q-chip
                       :color="statusColor(props.row.status)"
@@ -98,10 +103,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import { ref, computed, onMounted } from "vue";
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default {
   name: "AppAssistencia",
@@ -112,14 +117,21 @@ export default {
     const selectedRequisicoes = ref([]);
 
     const columns = [
-      { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
+      {
+        name: "id",
+        required: true,
+        label: "ID",
+        align: "left",
+        field: "id",
+        alignClass: "text-left",
+      },
       {
         name: "descricao",
         required: true,
         label: "Descrição",
         align: "left",
         field: "descricao",
-        alignClass: 'text-left'
+        alignClass: "text-left",
       },
       {
         name: "status",
@@ -127,7 +139,7 @@ export default {
         label: "Status",
         align: "left",
         field: "status",
-        alignClass: 'text-left'
+        alignClass: "text-left",
       },
       {
         name: "dataAbertura",
@@ -135,7 +147,7 @@ export default {
         label: "Data de Abertura",
         align: "left",
         field: "dataAbertura",
-        alignClass: 'text-left'
+        alignClass: "text-left",
       },
     ];
 
@@ -160,12 +172,14 @@ export default {
     const filteredRequisicoes = computed(() => {
       return requisicoes.value.filter((requisicao) => {
         const matchesSearch =
-          (requisicao.descricao && requisicao.descricao
-            .toLowerCase()
-            .includes(searchQuery.value.toLowerCase())) ||
-          (requisicao.status && requisicao.status
-            .toLowerCase()
-            .includes(searchQuery.value.toLowerCase()));
+          (requisicao.descricao &&
+            requisicao.descricao
+              .toLowerCase()
+              .includes(searchQuery.value.toLowerCase())) ||
+          (requisicao.status &&
+            requisicao.status
+              .toLowerCase()
+              .includes(searchQuery.value.toLowerCase()));
 
         const matchesFilter =
           selectedFilter.value === "todos" ||
@@ -213,7 +227,9 @@ export default {
     };
 
     const formatDate = (dateString) => {
-      return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
+      return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss", {
+        locale: ptBR,
+      });
     };
 
     const openChamado = (id) => {

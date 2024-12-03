@@ -37,6 +37,9 @@
                       {{ props.row.status }}
                     </q-chip>
                   </div>
+                  <div v-else-if="col.name === 'dataAbertura'">
+                    {{ formatDate(props.row.dataAbertura) }}
+                  </div>
                   <div v-else>
                     {{ props.row[col.field] }}
                   </div>
@@ -57,6 +60,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default {
   name: "AppRequisicoes",
@@ -82,6 +87,14 @@ export default {
         label: "Status",
         align: "left",
         field: "status",
+        alignClass: 'text-left'
+      },
+      {
+        name: "dataAbertura",
+        required: true,
+        label: "Data de Abertura",
+        align: "left",
+        field: "dataAbertura",
         alignClass: 'text-left'
       },
     ];
@@ -116,6 +129,12 @@ export default {
       return status === "Aberto" ? "green" : "orange";
     };
 
+    const formatDate = (dateString) => {
+      return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss", {
+        locale: ptBR,
+      });
+    };
+
     const openChamado = (id) => {
       const chamado = requisicoes.value.find((req) => req.id === id);
       if (chamado) {
@@ -131,6 +150,7 @@ export default {
       statusColor,
       selectedRequisicoes,
       openChamado,
+      formatDate,
     };
   },
 };

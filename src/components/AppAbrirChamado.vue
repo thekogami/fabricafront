@@ -142,6 +142,7 @@ export default {
         const response = await axios.post('http://localhost:8080/api/chamados', {
           descricao: this.selectedTicket,
           status: "Aberto", // Definindo o status inicial como "Aberto"
+          descricaoProblema: this.details, // Adicionando a descrição do problema
         });
         console.log("Chamado criado com sucesso:", response.data);
         this.createdTicketId = response.data.id;
