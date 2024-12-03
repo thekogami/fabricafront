@@ -15,7 +15,7 @@ const routes = [
       { path: "requisicoes", component: AppRequisicoes },
       { path: "chamado/:id", component: AppChamadoAberto, props: true },
       { path: "assistencia", component: AppAssistencia },
-      { path: "relatorio", component: AppRelatorioGeral }
+      { path: "relatorio", component: AppRelatorioGeral },
     ],
   },
   {

@@ -70,7 +70,12 @@
 
         <q-space />
 
-        <EssentialLink title="Sair" icon="exit_to_app" link="/logout" />
+        <q-item clickable @click="handleLogout">
+          <q-item-section avatar>
+            <q-icon name="exit_to_app" />
+          </q-item-section>
+          <q-item-section> Sair </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -82,8 +87,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import EssentialLink from "components/EssentialLink.vue";
+import axios from "axios";
 
 defineOptions({
   name: "MainLayout",
@@ -119,6 +125,7 @@ function toggleLeftDrawer() {
 }
 
 const route = useRoute();
+const router = useRouter();
 
 const pageTitle = computed(() => {
   switch (route.path) {
@@ -143,11 +150,15 @@ const userName = ref("");
 const isAuthenticated = ref(false);
 
 onMounted(async () => {
-  const email = localStorage.getItem('userEmail');
-  isAuthenticated.value = localStorage.getItem('isAuthenticated') === 'true';
-  if (email) {
+  const email = localStorage.getItem("userEmail");
+  isAuthenticated.value = localStorage.getItem("isAuthenticated") === "true";
+  if (!isAuthenticated.value) {
+    router.push("/"); // Redirecione para a tela de login se não autenticado
+  } else if (email) {
     try {
-      const response = await axios.get(`http://localhost:8080/api/usuarios/${email}`);
+      const response = await axios.get(
+        `http://localhost:8080/api/usuarios/${email}`
+      );
       if (response.data) {
         userName.value = response.data.nome; // Supondo que o nome do usuário está no campo 'nome'
       }
@@ -156,6 +167,13 @@ onMounted(async () => {
     }
   }
 });
+
+function handleLogout() {
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("isAuthenticated");
+  isAuthenticated.value = false;
+  router.push("/");
+}
 </script>
 
 <style scoped>

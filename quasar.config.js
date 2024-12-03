@@ -29,7 +29,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Notify'] // Adicione o plugin de notificação aqui
     },
 
     // app boot file (/src/boot)
