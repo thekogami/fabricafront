@@ -215,6 +215,7 @@ export default {
       try {
         const dataToSend = {
           ...editChamadoData.value,
+          status: editChamadoData.value.status.value, // Extrair o valor do status
           dataAbertura: parseDate(editChamadoData.value.dataAbertura)
         };
         console.log("Dados enviados para edição:", dataToSend);
