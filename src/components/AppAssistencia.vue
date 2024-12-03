@@ -66,16 +66,29 @@
             selection="multiple"
             v-model:selected="selectedRequisicoes"
           >
-            <template v-slot:body-cell-status="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="statusColor(props.row.status)"
-                  text-color="white"
-                  size="small"
-                >
-                  {{ props.row.status }}
-                </q-chip>
-              </q-td>
+            <template v-slot:body="props">
+              <q-tr :props="props" @dblclick="openChamado(props.row.id)">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="col.alignClass">
+                  <div v-if="col.name === 'status'">
+                    <q-chip
+                      :color="statusColor(props.row.status)"
+                      text-color="white"
+                      size="small"
+                    >
+                      {{ props.row.status }}
+                    </q-chip>
+                  </div>
+                  <div v-else-if="col.name === 'dataAbertura'">
+                    {{ formatDate(props.row.dataAbertura) }}
+                  </div>
+                  <div v-else>
+                    {{ props.row[col.field] }}
+                  </div>
+                </q-td>
+              </q-tr>
+            </template>
+            <template v-slot:no-data>
+              <div class="text-center q-pa-md">Sem chamados cadastrados</div>
             </template>
           </q-table>
         </q-card-section>
@@ -85,74 +98,28 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import axios from 'axios';
+import { ref, computed, onMounted } from "vue";
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export default {
-  name: "AppRequisicoes",
+  name: "AppAssistencia",
   setup() {
     const searchQuery = ref("");
     const selectedFilter = ref("todos");
-
-    const requisicoes = ref([
-      {
-        id: 1,
-        requerente: "Ana Julia",
-        nome: "Problemas Computador",
-        status: "Aberto",
-        dataAbertura: "21-06-2024 14:30",
-      },
-      {
-        id: 2,
-        requerente: "Paulo S.",
-        nome: "Manutenção Infraestrutura",
-        status: "Em andamento",
-        dataAbertura: "21-06-2024 14:30",
-      },
-      {
-        id: 3,
-        requerente: "Joao P.",
-        nome: "Falha em Sistemas",
-        status: "Aberto",
-        dataAbertura: "01-06-2024 16:30",
-      },
-      {
-        id: 4,
-        requerente: "Pedro",
-        nome: "Novo Colaborador / Acessos",
-        status: "Em andamento",
-        dataAbertura: "01-06-2024 16:30",
-      },
-      {
-        id: 5,
-        requerente: "Julia M.",
-        nome: "Falha em Sistemas",
-        status: "Aberto",
-        dataAbertura: "01-06-2024 16:30",
-      },
-      {
-        id: 6,
-        requerente: "Julia M.",
-        nome: "Novo Colaborador / Acessos",
-        status: "Resolvido",
-        dataAbertura: "01-06-2024 16:30",
-      },
-    ]);
+    const requisicoes = ref([]);
+    const selectedRequisicoes = ref([]);
 
     const columns = [
-      { name: "id", required: true, label: "ID", align: "left", field: "id" },
+      { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
       {
-        name: "requerente",
+        name: "descricao",
         required: true,
-        label: "Requerente",
+        label: "Descrição",
         align: "left",
-        field: "requerente",
-      },
-      {
-        name: "nome",
-        required: true,
-        label: "Nome",
-        align: "left",
-        field: "nome",
+        field: "descricao",
+        alignClass: 'text-left'
       },
       {
         name: "status",
@@ -160,6 +127,7 @@ export default {
         label: "Status",
         align: "left",
         field: "status",
+        alignClass: 'text-left'
       },
       {
         name: "dataAbertura",
@@ -167,8 +135,23 @@ export default {
         label: "Data de Abertura",
         align: "left",
         field: "dataAbertura",
+        alignClass: 'text-left'
       },
     ];
+
+    const fetchRequisicoes = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/chamados");
+        console.log("Dados recebidos:", response.data);
+        requisicoes.value = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar requisições:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchRequisicoes();
+    });
 
     const filterChamados = (status) => {
       selectedFilter.value = status;
@@ -177,12 +160,12 @@ export default {
     const filteredRequisicoes = computed(() => {
       return requisicoes.value.filter((requisicao) => {
         const matchesSearch =
-          requisicao.requerente
+          (requisicao.descricao && requisicao.descricao
             .toLowerCase()
-            .includes(searchQuery.value.toLowerCase()) ||
-          requisicao.nome
+            .includes(searchQuery.value.toLowerCase())) ||
+          (requisicao.status && requisicao.status
             .toLowerCase()
-            .includes(searchQuery.value.toLowerCase());
+            .includes(searchQuery.value.toLowerCase()));
 
         const matchesFilter =
           selectedFilter.value === "todos" ||
@@ -229,7 +212,17 @@ export default {
       }
     };
 
-    const selectedRequisicoes = ref([]);
+    const formatDate = (dateString) => {
+      return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss", { locale: ptBR });
+    };
+
+    const openChamado = (id) => {
+      const chamado = requisicoes.value.find((req) => req.id === id);
+      if (chamado) {
+        // Navegar para a página de detalhes do chamado
+        console.log(`Abrindo chamado ${id}`);
+      }
+    };
 
     return {
       searchQuery,
@@ -242,6 +235,8 @@ export default {
       selectedRequisicoes,
       filterChamados,
       selectedFilter,
+      openChamado,
+      formatDate,
     };
   },
 };
@@ -271,5 +266,9 @@ export default {
 
 .q-table {
   margin-top: 20px;
+}
+
+.text-left {
+  text-align: left;
 }
 </style>

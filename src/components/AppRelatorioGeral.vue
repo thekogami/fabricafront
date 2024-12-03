@@ -66,8 +66,6 @@ export default {
           "http://localhost:8080/api/relatorio/chart1"
         );
         this.chartData1.columns = response.data.columns;
-        // Se houver dados adicionais, você pode adicioná-los aqui
-        // this.additionalData1.columns = response.data.additionalColumns;
       } catch (error) {
         console.error("Erro ao buscar dados do gráfico 1:", error);
       }
@@ -78,8 +76,6 @@ export default {
           "http://localhost:8080/api/relatorio/chart2"
         );
         this.chartData2.columns = response.data.columns;
-        // Se houver dados adicionais, você pode adicioná-los aqui
-        // this.additionalData2.columns = response.data.additionalColumns;
       } catch (error) {
         console.error("Erro ao buscar dados do gráfico 2:", error);
       }
