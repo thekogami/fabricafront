@@ -148,6 +148,9 @@ export default {
           descricao: this.selectedTicket,
           status: "Aberto", // Definindo o status inicial como "Aberto"
           descricaoProblema: this.details, // Adicionando a descrição do problema
+          prioridade: this.selectedPriority, // Adicionando a prioridade
+          usuarioId: userId, // Adicionando o ID do usuário
+          usuarioNome: userName // Adicionando o nome do usuário
         });
         console.log("Chamado criado com sucesso:", response.data);
         this.createdTicketId = response.data.id;
@@ -170,7 +173,6 @@ export default {
   display: flex;
   height: 100vh;
 }
-
 
 .sidebar {
   width: 250px;

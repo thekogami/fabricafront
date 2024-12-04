@@ -85,7 +85,7 @@
                     {{ formatDate(props.row.dataAbertura) }}
                   </div>
                   <div v-else-if="col.name === 'actions'">
-                    <q-btn flat icon="edit" @click="editChamado(props.row.id)" />
+                    <q-btn flat icon="edit" @click="openEditModal(props.row)" />
                     <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
                   </div>
                   <div v-else>
@@ -100,6 +100,69 @@
           </q-table>
         </q-card-section>
       </q-card>
+
+      <!-- Modal de Edição -->
+      <q-dialog v-model="showEditModal">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Editar Chamado</div>
+          </q-card-section>
+          <q-card-section>
+            <q-input
+              v-model="editChamadoData.descricao"
+              label="Descrição"
+              filled
+              dense
+            />
+            <q-select
+              v-model="editChamadoData.status"
+              :options="statusOptions"
+              label="Status"
+              filled
+              dense
+            />
+            <q-input
+              v-model="editChamadoData.dataAbertura"
+              label="Data de Abertura"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.prioridade"
+              label="Prioridade"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.usuarioNome"
+              label="Usuário"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.tecnicoNome"
+              label="Técnico"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.requerente"
+              label="Requerente"
+              filled
+              dense
+              readonly
+            />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Cancelar" color="primary" @click="closeEditModal" />
+            <q-btn flat label="Salvar" color="primary" @click="saveEditChamado" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-page>
   </div>
 </template>
@@ -108,7 +171,7 @@
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default {
@@ -119,6 +182,23 @@ export default {
     const selectedFilter = ref("todos");
     const requisicoes = ref([]);
     const selectedRequisicoes = ref([]);
+    const showEditModal = ref(false);
+    const editChamadoData = ref({
+      id: null,
+      descricao: "",
+      status: "",
+      dataAbertura: "",
+      prioridade: "",
+      usuarioNome: "",
+      tecnicoNome: "",
+      requerente: ""
+    });
+
+    const statusOptions = [
+      { label: "Aberto", value: "Aberto" },
+      { label: "Em andamento", value: "Em andamento" },
+      { label: "Resolvido", value: "Resolvido" }
+    ];
 
     const columns = [
       { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
@@ -266,12 +346,37 @@ export default {
       });
     };
 
+    const parseDate = (dateString) => {
+      return parse(dateString, "dd/MM/yyyy HH:mm:ss", new Date());
+    };
+
     const openChamado = (id) => {
       router.push({ name: "AppChamadoAberto", params: { id } });
     };
 
-    const editChamado = (id) => {
-      router.push({ name: "AppChamadoAberto", params: { id } });
+    const openEditModal = (chamado) => {
+      editChamadoData.value = { ...chamado, dataAbertura: formatDate(chamado.dataAbertura) };
+      showEditModal.value = true;
+    };
+
+    const closeEditModal = () => {
+      showEditModal.value = false;
+    };
+
+    const saveEditChamado = async () => {
+      try {
+        const dataToSend = {
+          ...editChamadoData.value,
+          status: editChamadoData.value.status.value, // Extrair o valor do status
+          dataAbertura: parseDate(editChamadoData.value.dataAbertura)
+        };
+        console.log("Dados enviados para edição:", dataToSend);
+        await axios.put(`http://localhost:8080/api/chamados/${editChamadoData.value.id}`, dataToSend);
+        fetchRequisicoes(); // Atualize a lista de requisições após a edição
+        closeEditModal();
+      } catch (error) {
+        console.error("Erro ao editar requisição:", error);
+      }
     };
 
     const deleteChamado = async (id) => {
@@ -295,9 +400,15 @@ export default {
       filterChamados,
       selectedFilter,
       openChamado,
-      editChamado,
+      openEditModal,
+      closeEditModal,
+      saveEditChamado,
       deleteChamado,
       formatDate,
+      parseDate,
+      showEditModal,
+      editChamadoData,
+      statusOptions
     };
   },
 };
