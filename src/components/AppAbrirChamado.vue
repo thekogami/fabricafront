@@ -7,8 +7,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Problemas Computador' }"
-            @click="selectTicket('Problemas Computador')"
-            @dblclick="openDetailsModal('Problemas Computador')"
+            @click="selectTicket('Problemas Computador', 'Alta')"
+            @dblclick="openDetailsModal('Problemas Computador', 'Alta')"
           >
             <h3>Problemas Computador</h3>
             <p>Ticket específico para relatar problemas de computador.</p>
@@ -16,8 +16,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Manutenção Infraestrutura' }"
-            @click="selectTicket('Manutenção Infraestrutura')"
-            @dblclick="openDetailsModal('Manutenção Infraestrutura')"
+            @click="selectTicket('Manutenção Infraestrutura', 'Média')"
+            @dblclick="openDetailsModal('Manutenção Infraestrutura', 'Média')"
           >
             <h3>Manutenção Infraestrutura</h3>
             <p>
@@ -28,8 +28,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Falha em Sistemas' }"
-            @click="selectTicket('Falha em Sistemas')"
-            @dblclick="openDetailsModal('Falha em Sistemas')"
+            @click="selectTicket('Falha em Sistemas', 'Alta')"
+            @dblclick="openDetailsModal('Falha em Sistemas', 'Alta')"
           >
             <h3>Falha em Sistemas</h3>
             <p>Ticket relacionado a falhas de sistema interno.</p>
@@ -37,8 +37,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Novo Colaborador / Acessos' }"
-            @click="selectTicket('Novo Colaborador / Acessos')"
-            @dblclick="openDetailsModal('Novo Colaborador / Acessos')"
+            @click="selectTicket('Novo Colaborador / Acessos', 'Baixa')"
+            @dblclick="openDetailsModal('Novo Colaborador / Acessos', 'Baixa')"
           >
             <h3>Novo Colaborador / Acessos</h3>
             <p>
@@ -49,8 +49,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Reservar um item' }"
-            @click="selectTicket('Reservar um item')"
-            @dblclick="openDetailsModal('Reservar um item')"
+            @click="selectTicket('Reservar um item', 'Baixa')"
+            @dblclick="openDetailsModal('Reservar um item', 'Baixa')"
           >
             <h3>Reservar um item</h3>
             <p>Ticket específico para reservar item de informática.</p>
@@ -58,8 +58,8 @@
           <div
             class="ticket-item"
             :class="{ selected: selectedTicket === 'Instalação de programa' }"
-            @click="selectTicket('Instalação de programa')"
-            @dblclick="openDetailsModal('Instalação de programa')"
+            @click="selectTicket('Instalação de programa', 'Média')"
+            @dblclick="openDetailsModal('Instalação de programa', 'Média')"
           >
             <h3>Instalação de programa</h3>
             <p>Ticket específico para instalações de software ou hardware.</p>
@@ -119,6 +119,7 @@ export default {
   data() {
     return {
       selectedTicket: null,
+      selectedPriority: null,
       showDetailsModal: false,
       details: "",
       showSuccessDialog: false,
@@ -126,11 +127,13 @@ export default {
     };
   },
   methods: {
-    selectTicket(ticket) {
+    selectTicket(ticket, priority) {
       this.selectedTicket = ticket;
+      this.selectedPriority = priority;
     },
-    openDetailsModal(ticket) {
+    openDetailsModal(ticket, priority) {
       this.selectedTicket = ticket;
+      this.selectedPriority = priority;
       this.showDetailsModal = true;
     },
     closeDetailsModal() {
@@ -139,10 +142,15 @@ export default {
     },
     async submitDetails() {
       try {
+        const userId = localStorage.getItem('userId'); // Assumindo que o ID do usuário está armazenado no localStorage
+        const userName = localStorage.getItem('userName'); // Assumindo que o nome do usuário está armazenado no localStorage
         const response = await axios.post('http://localhost:8080/api/chamados', {
           descricao: this.selectedTicket,
           status: "Aberto", // Definindo o status inicial como "Aberto"
           descricaoProblema: this.details, // Adicionando a descrição do problema
+          prioridade: this.selectedPriority, // Adicionando a prioridade
+          usuarioId: userId, // Adicionando o ID do usuário
+          usuarioNome: userName, // Adicionando o nome do usuário
         });
         console.log("Chamado criado com sucesso:", response.data);
         this.createdTicketId = response.data.id;

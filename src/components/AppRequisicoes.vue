@@ -22,12 +22,15 @@
             flat
             bordered
             dense
-            selection="multiple"
-            v-model:selected="selectedRequisicoes"
           >
             <template v-slot:body="props">
               <q-tr :props="props" @dblclick="openChamado(props.row.id)">
-                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="col.alignClass">
+                <q-td
+                  v-for="col in props.cols"
+                  :key="col.name"
+                  :props="props"
+                  :class="col.alignClass"
+                >
                   <div v-if="col.name === 'status'">
                     <q-chip
                       :color="statusColor(props.row.status)"
@@ -40,13 +43,13 @@
                   <div v-else-if="col.name === 'dataAbertura'">
                     {{ formatDate(props.row.dataAbertura) }}
                   </div>
+                  <div v-else-if="col.name === 'actions'">
+                    <q-btn flat icon="edit" @click="openEditModal(props.row)" />
+                    <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
+                  </div>
                   <div v-else>
                     {{ props.row[col.field] }}
                   </div>
-                </q-td>
-                <q-td>
-                  <q-btn flat icon="edit" @click="openEditModal(props.row)" />
-                  <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
                 </q-td>
               </q-tr>
             </template>
@@ -84,6 +87,34 @@
               dense
               readonly
             />
+            <q-input
+              v-model="editChamadoData.prioridade"
+              label="Prioridade"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.usuarioNome"
+              label="Usuário"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.tecnicoNome"
+              label="Técnico"
+              filled
+              dense
+              readonly
+            />
+            <q-input
+              v-model="editChamadoData.requerente"
+              label="Requerente"
+              filled
+              dense
+              readonly
+            />
           </q-card-section>
           <q-card-actions align="right">
             <q-btn flat label="Cancelar" color="primary" @click="closeEditModal" />
@@ -114,7 +145,11 @@ export default {
       id: null,
       descricao: "",
       status: "",
-      dataAbertura: ""
+      dataAbertura: "",
+      prioridade: "",
+      usuarioNome: "",
+      tecnicoNome: "",
+      requerente: ""
     });
 
     const statusOptions = [
@@ -125,6 +160,13 @@ export default {
 
     const columns = [
       { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
+      {
+        name: "requerente",
+        label: "Requerente",
+        align: "left",
+        field: "requerente",
+        alignClass: 'text-left'
+      },
       {
         name: "descricao",
         required: true,
@@ -147,6 +189,21 @@ export default {
         label: "Data de Abertura",
         align: "left",
         field: "dataAbertura",
+        alignClass: 'text-left'
+      },
+      {
+        name: "prioridade",
+        required: true,
+        label: "Prioridade",
+        align: "left",
+        field: "prioridade",
+        alignClass: 'text-left'
+      },
+      {
+        name: "tecnicoNome",
+        label: "Técnico",
+        align: "left",
+        field: "tecnicoNome",
         alignClass: 'text-left'
       },
       {
@@ -294,5 +351,9 @@ export default {
 
 .text-left {
   text-align: left;
+}
+
+.text-center {
+  text-align: center;
 }
 </style>

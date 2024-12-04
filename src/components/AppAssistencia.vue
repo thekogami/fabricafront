@@ -63,8 +63,6 @@
             flat
             bordered
             dense
-            selection="multiple"
-            v-model:selected="selectedRequisicoes"
           >
             <template v-slot:body="props">
               <q-tr :props="props" @dblclick="openChamado(props.row.id)">
@@ -86,13 +84,13 @@
                   <div v-else-if="col.name === 'dataAbertura'">
                     {{ formatDate(props.row.dataAbertura) }}
                   </div>
+                  <div v-else-if="col.name === 'actions'">
+                    <q-btn flat icon="edit" @click="editChamado(props.row.id)" />
+                    <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
+                  </div>
                   <div v-else>
                     {{ props.row[col.field] }}
                   </div>
-                </q-td>
-                <q-td>
-                  <q-btn flat icon="edit" @click="editChamado(props.row.id)" />
-                  <q-btn flat icon="delete" @click="deleteChamado(props.row.id)" />
                 </q-td>
               </q-tr>
             </template>
@@ -123,13 +121,13 @@ export default {
     const selectedRequisicoes = ref([]);
 
     const columns = [
+      { name: "id", required: true, label: "ID", align: "left", field: "id", alignClass: 'text-left' },
       {
-        name: "id",
-        required: true,
-        label: "ID",
+        name: "requerente",
+        label: "Requerente",
         align: "left",
-        field: "id",
-        alignClass: "text-left",
+        field: "requerente",
+        alignClass: 'text-left'
       },
       {
         name: "descricao",
@@ -137,7 +135,7 @@ export default {
         label: "Descrição",
         align: "left",
         field: "descricao",
-        alignClass: "text-left",
+        alignClass: 'text-left'
       },
       {
         name: "status",
@@ -145,7 +143,7 @@ export default {
         label: "Status",
         align: "left",
         field: "status",
-        alignClass: "text-left",
+        alignClass: 'text-left'
       },
       {
         name: "dataAbertura",
@@ -153,7 +151,30 @@ export default {
         label: "Data de Abertura",
         align: "left",
         field: "dataAbertura",
-        alignClass: "text-left",
+        alignClass: 'text-left'
+      },
+      {
+        name: "prioridade",
+        required: true,
+        label: "Prioridade",
+        align: "left",
+        field: "prioridade",
+        alignClass: 'text-left'
+      },
+      {
+        name: "usuarioNome",
+        required: true,
+        label: "Usuário",
+        align: "left",
+        field: "usuarioNome",
+        alignClass: 'text-left'
+      },
+      {
+        name: "tecnicoNome",
+        label: "Técnico",
+        align: "left",
+        field: "tecnicoNome",
+        alignClass: 'text-left'
       },
       {
         name: "actions",
@@ -310,5 +331,9 @@ export default {
 
 .text-left {
   text-align: left;
+}
+
+.text-center {
+  text-align: center;
 }
 </style>
